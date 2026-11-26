@@ -17,7 +17,7 @@ import time
 import numpy as np
 
 from wanglandau import Ising, wang_landau, normalise, canonical
-from wanglandau.exact import ising_exact_dos, TC_ISING
+from wanglandau.exact import ising_exact_dos
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 

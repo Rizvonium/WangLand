@@ -1,0 +1,29 @@
+Wang-Landau demo: 2D Ising model, periodic L x L lattice, J = k_B = 1
+  input : L = 16 (N = 256 spins), 257 energy levels, seed = 2024
+          ln f0 = 1, ln f_final = 1e-06, flatness = 0.8
+  stage  0  ln f = 1.000e+00  sweeps =      6840  min(H)/<H> = 0.812
+  stage  1  ln f = 5.000e-01  sweeps =      1540  min(H)/<H> = 0.801
+  stage  2  ln f = 2.500e-01  sweeps =      1800  min(H)/<H> = 0.807
+  stage  3  ln f = 1.250e-01  sweeps =      2690  min(H)/<H> = 0.800
+  stage  4  ln f = 6.250e-02  sweeps =      2770  min(H)/<H> = 0.811
+  stage  5  ln f = 3.125e-02  sweeps =      1890  min(H)/<H> = 0.810
+  stage  6  ln f = 1.562e-02  sweeps =      2830  min(H)/<H> = 0.803
+  stage  7  ln f = 7.812e-03  sweeps =      2690  min(H)/<H> = 0.807
+  stage  8  ln f = 3.906e-03  sweeps =      5230  min(H)/<H> = 0.804
+  stage  9  ln f = 1.953e-03  sweeps =      4590  min(H)/<H> = 0.804
+  stage 10  ln f = 9.766e-04  sweeps =      9020  min(H)/<H> = 0.826
+  stage 11  ln f = 4.883e-04  sweeps =      9890  min(H)/<H> = 0.814
+  stage 12  ln f = 2.441e-04  sweeps =     20810  min(H)/<H> = 0.806
+  stage 13  ln f = 1.221e-04  sweeps =     23120  min(H)/<H> = 0.804
+  stage 14  ln f = 6.104e-05  sweeps =     32830  min(H)/<H> = 0.801
+  stage 15  ln f = 3.052e-05  sweeps =     20800  min(H)/<H> = 0.801
+  stage 16  ln f = 1.526e-05  sweeps =     15630  min(H)/<H> = 0.801
+  stage 17  ln f = 7.629e-06  sweeps =     49440  min(H)/<H> = 0.802
+  stage 18  ln f = 3.815e-06  sweeps =     64170  min(H)/<H> = 0.801
+  stage 19  ln f = 1.907e-06  sweeps =    321450  min(H)/<H> = 0.801
+  done  : 600,030 MC sweeps in 4.1 s (38 M flips/s)
+  output: E[257] lng[257] H[257] stages[20] F,U,S,C(T)[221]
+  check : ln g(E_min) = 0.6931 = ln 2
+          ln(sum g)/N = 0.69330  (ln 2 = 0.69315)
+  exact : mean eps(ln g) = 3.00e-03
+          C_max/N = 1.568 at T = 2.325 (exact 1.551 at 2.325)

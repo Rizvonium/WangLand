@@ -1,0 +1,82 @@
+Wang-Landau demo: 2D Ising model, periodic L x L lattice, J = k_B = 1
+  input : L = 16 (N = 256 spins), levels = 257, ln f0 = 1, ln f_final = 1e-06, flatness = 0.8, seed = 2024
+  stage  0  ln f = 1.000e+00  sweeps =      6840  min(H)/<H> = 0.812
+  stage  1  ln f = 5.000e-01  sweeps =      1540  min(H)/<H> = 0.801
+  stage  2  ln f = 2.500e-01  sweeps =      1800  min(H)/<H> = 0.807
+  stage  3  ln f = 1.250e-01  sweeps =      2690  min(H)/<H> = 0.800
+  stage  4  ln f = 6.250e-02  sweeps =      2770  min(H)/<H> = 0.811
+  stage  5  ln f = 3.125e-02  sweeps =      1890  min(H)/<H> = 0.810
+  stage  6  ln f = 1.562e-02  sweeps =      2830  min(H)/<H> = 0.803
+  stage  7  ln f = 7.812e-03  sweeps =      2690  min(H)/<H> = 0.807
+  stage  8  ln f = 3.906e-03  sweeps =      5230  min(H)/<H> = 0.804
+  stage  9  ln f = 1.953e-03  sweeps =      4590  min(H)/<H> = 0.804
+  stage 10  ln f = 9.766e-04  sweeps =      9020  min(H)/<H> = 0.826
+  stage 11  ln f = 4.883e-04  sweeps =      9890  min(H)/<H> = 0.814
+  stage 12  ln f = 2.441e-04  sweeps =     20810  min(H)/<H> = 0.806
+  stage 13  ln f = 1.221e-04  sweeps =     23120  min(H)/<H> = 0.804
+  stage 14  ln f = 6.104e-05  sweeps =     32830  min(H)/<H> = 0.801
+  stage 15  ln f = 3.052e-05  sweeps =     20800  min(H)/<H> = 0.801
+  stage 16  ln f = 1.526e-05  sweeps =     15630  min(H)/<H> = 0.801
+  stage 17  ln f = 7.629e-06  sweeps =     49440  min(H)/<H> = 0.802
+  stage 18  ln f = 3.815e-06  sweeps =     64170  min(H)/<H> = 0.801
+  stage 19  ln f = 1.907e-06  sweeps =    321450  min(H)/<H> = 0.801
+  done  : 600,030 MC sweeps in 4.0 s (38 M flips/s)
+  output: arrays E[257], lng[257], H[257]; stages[20]; F,U,S,C(T)[221]
+  check : ln g(E_min) = ln 2 = 0.6931;  sum g(E) = 2^N ? ln sum g / N = 0.69330 vs ln 2 = 0.69315
+  vs exact (Beale): mean eps(ln g) = 3.00e-03, C_max/N = 1.568 at T = 2.325 (exact 1.551 at 2.325); T_c(inf) = 2.2692
+Exception ignored in: <__main__.Tee object at 0x7f9c851d7910>
+Traceback (most recent call last):
+  File "/home/user/WangLand/demo.py", line 36, in flush
+    st.flush()
+ValueError: I/O operation on closed file.
+== convergence
+  saved /home/user/WangLand/results/convergence_L16.npz
+== convergence done in 8s
+== windows
+  saved /home/user/WangLand/results/windows_L32_W1_r0.npz
+  W= 1 rep=0 total sweeps=1,120,840 max/window=1,120,840 cpu=30.0s
+  saved /home/user/WangLand/results/windows_L32_W1_r1.npz
+  W= 1 rep=1 total sweeps=1,728,400 max/window=1,728,400 cpu=45.8s
+  saved /home/user/WangLand/results/windows_L32_W1_r2.npz
+  W= 1 rep=2 total sweeps=1,895,660 max/window=1,895,660 cpu=48.7s
+  saved /home/user/WangLand/results/windows_L32_W2_r0.npz
+  W= 2 rep=0 total sweeps=1,347,170 max/window=1,200,970 cpu=32.4s
+  saved /home/user/WangLand/results/windows_L32_W2_r1.npz
+  W= 2 rep=1 total sweeps=1,561,730 max/window=1,323,060 cpu=38.6s
+  saved /home/user/WangLand/results/windows_L32_W2_r2.npz
+  W= 2 rep=2 total sweeps=1,491,790 max/window=1,005,520 cpu=38.3s
+  saved /home/user/WangLand/results/windows_L32_W4_r0.npz
+  W= 4 rep=0 total sweeps=854,330 max/window=506,780 cpu=20.5s
+  saved /home/user/WangLand/results/windows_L32_W4_r1.npz
+  W= 4 rep=1 total sweeps=885,360 max/window=486,570 cpu=25.4s
+  saved /home/user/WangLand/results/windows_L32_W4_r2.npz
+  W= 4 rep=2 total sweeps=994,730 max/window=575,690 cpu=30.1s
+  saved /home/user/WangLand/results/windows_L32_W8_r0.npz
+  W= 8 rep=0 total sweeps=418,710 max/window=128,470 cpu=10.3s
+  saved /home/user/WangLand/results/windows_L32_W8_r1.npz
+  W= 8 rep=1 total sweeps=552,400 max/window=264,990 cpu=14.1s
+  saved /home/user/WangLand/results/windows_L32_W8_r2.npz
+  W= 8 rep=2 total sweeps=1,116,010 max/window=548,700 cpu=29.2s
+  saved /home/user/WangLand/results/windows_L32_W16_r0.npz
+  W=16 rep=0 total sweeps=291,580 max/window=53,860 cpu=6.8s
+  saved /home/user/WangLand/results/windows_L32_W16_r1.npz
+  W=16 rep=1 total sweeps=449,210 max/window=157,190 cpu=11.8s
+  saved /home/user/WangLand/results/windows_L32_W16_r2.npz
+  W=16 rep=2 total sweeps=282,080 max/window=67,540 cpu=6.2s
+  saved /home/user/WangLand/results/windows_L32_summary.npz
+== windows done in 100s
+== ising
+  saved /home/user/WangLand/results/ising_L8.npz
+  saved /home/user/WangLand/results/ising_L16.npz
+  saved /home/user/WangLand/results/ising_L32.npz
+  saved /home/user/WangLand/results/ising_L32b.npz
+  saved /home/user/WangLand/results/ising_L50.npz
+  L=50: W=4 sweeps=1,799,950 wall=54s
+  saved /home/user/WangLand/results/ising_L64.npz
+  L=64: W=8 sweeps=2,751,230 wall=95s
+  saved /home/user/WangLand/results/ising_L128.npz
+  L=128: W=24 sweeps=2,811,380 wall=330s
+== ising done in 544s
+== potts
+  saved /home/user/WangLand/results/potts_q10_L20.npz
+  Potts L=20: W=2 sweeps=10,761,660 wall=80s

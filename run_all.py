@@ -64,7 +64,6 @@ def task_convergence():
     """Error of ln g after every stage (L = 16, exact DOS known)."""
     L, seeds = 16, range(8)
     res = pmap(_single, [(L, 1000 + s, 1e-9, True) for s in seeds])
-    m = Ising(L)
     snaps = np.array([r["lng_stages"] for r in res])          # (seed, stage, level)
     save(f"convergence_L{L}.npz", lng_stages=snaps, E=res[0]["E"],
          use=res[0]["use"], ln_f=res[0]["stages"]["ln_f"],

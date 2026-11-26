@@ -159,7 +159,7 @@ def join_windows(parts, n_levels, trim=0.15):
     m_abs[p0["i_lo"]:p0["i_hi"] + 1] = p0["m_abs"]
     use[p0["i_lo"]:p0["i_hi"] + 1] = p0["use"]
     joins = []
-    hi_prev, lo_prev = p0["i_hi"], p0["i_lo"]
+    hi_prev = p0["i_hi"]
     for p in parts[1:]:
         a = np.full(n_levels, np.nan)
         b = np.full(n_levels, np.nan)

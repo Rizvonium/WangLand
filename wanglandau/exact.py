@@ -91,7 +91,7 @@ def ising_exact_dos(L, extra_bits=256, return_ints=False):
 # exact finite-lattice thermodynamics at real temperature
 # --------------------------------------------------------------------------
 def _kaufman_lnZ(L, K):
-    from mpmath import mp, mpf, cosh, sinh, acosh, log, tanh, cospi, exp
+    from mpmath import mpf, cosh, sinh, acosh, log, tanh, cospi, exp
     N = L * L
     K = mpf(K)
     c = cosh(2 * K) ** 2 / sinh(2 * K)

@@ -396,10 +396,14 @@ def fig_fss():
 # ======================================================================
 # 6. ten-state Potts model (paper Fig. 4)
 # ======================================================================
-def fig_potts(sizes=(20, 40, 60, 80, 100), q=10):
+def fig_potts(sizes=None, q=10):
     style()
+    import glob
+    if sizes is None:
+        sizes = sorted(int(os.path.basename(f).split("_L")[1].split(".")[0])
+                       for f in glob.glob(os.path.join(RES, f"potts_q{q}_L*.npz")))
     data = [(L, load(f"potts_q{q}_L{L}.npz")) for L in sizes]
-    data = [(L, d) for L, d in data if d is not None]
+    data = [(L, d) for L, d in data if d is not None][-5:]
     if len(data) < 2:
         print("  (potts data missing)")
         return
@@ -425,10 +429,10 @@ def fig_potts(sizes=(20, 40, 60, 80, 100), q=10):
         rows.append((L, Tl, pmin, e_o, e_d, d["sweeps"]))
     ax[0].axvline(eo, color=INK, lw=1.1)
     ax[0].axvline(ed, color=INK, lw=1.1)
-    ax[0].text(eo + 0.015, 2e-6, r"$e_{ord}$ (exact)", fontsize=16, color=INK)
-    ax[0].text(ed + 0.015, 2e-6, r"$e_{dis}$ (exact)", fontsize=16, color=INK)
-    ax[0].set(xlabel="E/N  (J)", ylabel=r"$P(E, T_c(L))$  (peaks = 1)", xlim=(-1.9, -0.6),
-              ylim=(1e-6, 2.5))
+    ax[0].text(eo + 0.015, 2e-5, r"$e_{ord}$ (exact)", fontsize=17, color=INK)
+    ax[0].text(ed + 0.015, 2e-5, r"$e_{dis}$ (exact)", fontsize=17, color=INK)
+    ax[0].set(xlabel="E/N  (J)", ylabel=r"$P(E, T_c(L))$  (peaks = 1)", xlim=(-1.84, -0.72),
+              ylim=(1e-5, 3))
     ax[0].legend(loc="lower center", ncol=3, fontsize=17)
     panel_label(ax[0], "(a) canonical distribution at equal-height T")
 
@@ -552,7 +556,7 @@ def fig_efficiency():
 # ======================================================================
 def fig_join():
     style()
-    from wanglandau import multirange, Ising, normalise, ising_mirror
+    from wanglandau import multirange, Ising, normalise
     path = os.path.join(RES, "join_demo_L32.npz")
     m = Ising(32)
     N = m.N
