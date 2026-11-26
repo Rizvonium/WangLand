@@ -222,61 +222,52 @@ def fig_multirange():
     N = 256 * 256
     E, lng, Hw, wins = d["E"], d["lng"], d["H_win"], d["windows"]
     e = E / N
-    fig = plt.figure(figsize=(16.6, 5.6), constrained_layout=True)
-    gs = fig.add_gridspec(2, 2, height_ratios=[1, 1], width_ratios=[1.25, 1])
-    a0 = fig.add_subplot(gs[:, 0])
-    a1 = fig.add_subplot(gs[0, 1])
-    a2 = fig.add_subplot(gs[1, 1])
-
+    fig, ax = plt.subplots(1, 3, figsize=(16.6, 5.6), constrained_layout=True,
+                           gridspec_kw=dict(width_ratios=[1.15, 1, 1]))
     ok = np.isfinite(lng)
     sim = ok & (e <= 0.2 + 1e-12)
-    a0.plot(e[sim], lng[sim] / N, color=BLUE, lw=2.6, label="simulated  (E/N ≤ 0.2)")
     mir = ok & (e > 0.2)
-    a0.plot(e[mir], lng[mir] / N, color=BLUES[0], lw=2.6, label="mirrored  g(E) = g(−E)")
-    nW = len(wins)
-    y0 = -0.06
-    for k, (lo, hi) in enumerate(wins):
-        yy = y0 - 0.035 * (k % 3)
-        a0.plot([e[lo], e[hi]], [yy, yy], color=(BLUES[3] if k % 2 else BLUES[1]), lw=2.2,
-                solid_capstyle="butt")
-    a0.text(-2.0, y0 - 0.135, f"{nW} overlapping energy windows (each bar = one independent walk)",
-            fontsize=17, color=INK2, va="top")
-    a0.set(xlabel="E/N  (J)", ylabel="ln g(E) / N", xlim=(-2.05, 2.05), ylim=(-0.2, 0.75))
-    a0.axhline(math.log(2), color=AXIS, lw=1.1)
-    a0.text(1.98, math.log(2) + 0.012, "ln 2", ha="right", va="bottom", fontsize=17, color=INK2)
-    a0.legend(loc="upper left")
-    panel_label(a0, "(a) joined density of states, 256×256")
+    ax[0].plot(e[sim], lng[sim] / N, color=BLUE, lw=2.6, label="simulated, E/N ≤ 0.2")
+    ax[0].plot(e[mir], lng[mir] / N, color=BLUES[0], lw=2.6, label="mirrored, g(E) = g(−E)")
+    for k, (lo, hi) in enumerate(wins):                  # window strip
+        yy = -0.07 - 0.045 * (k % 2)
+        ax[0].plot([e[lo], e[hi]], [yy, yy], color=(BLUES[3] if k % 2 else BLUES[1]), lw=3,
+                   solid_capstyle="butt")
+    ax[0].text(-1.0, -0.17, f"{len(wins)} windows", ha="center", va="top", fontsize=17, color=INK2)
+    ax[0].axhline(math.log(2), color=AXIS, lw=1.1)
+    ax[0].text(1.98, math.log(2) + 0.015, "ln 2", ha="right", va="bottom", fontsize=17, color=INK2)
+    ax[0].set(xlabel="E/N  (J)", ylabel="ln g(E) / N", xlim=(-2.05, 2.05), ylim=(-0.27, 0.8))
+    ax[0].legend(loc="upper right", fontsize=16, bbox_to_anchor=(1.0, 0.93))
+    panel_label(ax[0], "(a) joined density of states")
 
-    # zoom on windows around the critical energy
     ec = -math.sqrt(2)
-    sel = [k for k, (lo, hi) in enumerate(wins) if e[lo] < ec + 0.06 and e[hi] > ec - 0.06][:6]
-    for j, k in enumerate(sel):
+    centers = np.array([(e[lo] + e[hi]) / 2 for lo, hi in wins])
+    k0 = int(np.argmin(np.abs(centers - ec)))
+    for j, k in enumerate((k0 - 1, k0, k0 + 1)):
         lo, hi = wins[k]
         h = Hw[k, lo:hi + 1]
         h = h / np.nanmean(h)
-        a1.step(e[lo:hi + 1], h, where="mid", color=(BLUES[3] if j % 2 else BLUES[1]), lw=1.4)
-    a1.axhline(0.8, color=ORANGE, lw=2)
-    a1.text(0.02, 0.06, r"every window: $H(E) \geq 0.8\,\langle H\rangle$  (locally flat)", transform=a1.transAxes,
-            fontsize=17, color=INK)
-    a1.set(xlabel="E/N  (J)", ylabel=r"$H(E)\,/\,\langle H\rangle$", ylim=(0.5, 1.25))
-    panel_label(a1, "(b) final histograms near $E_c$")
+        ax[1].step(e[lo:hi + 1], h, where="mid", color=(BLUES[1], BLUES[3], ORANGE)[j], lw=1.6,
+                   label=f"window {k + 1}")
+    ax[1].axhline(0.8, color=INK, lw=1.4)
+    ax[1].text(0.03, 0.05, "flatness limit 0.8", transform=ax[1].transAxes, fontsize=17, color=INK)
+    ax[1].set(xlabel="E/N  (J)", ylabel=r"$H(E)\,/\,\langle H\rangle$", ylim=(0.6, 1.8))
+    ax[1].legend(loc="upper center", ncol=3, fontsize=15, handlelength=1.0, columnspacing=1.0)
+    panel_label(ax[1], "(b) neighbouring windows overlap")
 
-    # microcanonical inverse temperature from the joined ln g
     beta = np.full_like(lng, np.nan)
     beta[1:-1] = (lng[2:] - lng[:-2]) / 8.0             # d ln g / dE, dE = 4
-    m = sim & np.isfinite(beta) & (e > -1.9) & (e < 0.15)
-    a2.plot(e[m], beta[m], color=BLUE, lw=1.6)
-    for j in d["joins"]:
-        if m[j]:
-            a2.plot(e[j], beta[j], "o", ms=5, color=ORANGE, zorder=3)
-    a2.axhline(1 / X.TC_ISING, color=INK, lw=1.2)
-    a2.axvline(ec, color=INK, lw=1.2)
-    a2.text(-1.88, 1 / X.TC_ISING + 0.03, r"$1/T_c$ (Onsager)", fontsize=17, color=INK)
-    a2.text(ec + 0.03, 1.05, r"$E_c/N = -\sqrt{2}$", fontsize=17, color=INK)
-    a2.set(xlabel="E/N  (J)", ylabel=r"$\beta(E)=d\ln g/dE$  (1/J)", ylim=(-0.05, 1.3))
-    a2.legend(handles=[Line2D([], [], marker="o", ls="none", color=ORANGE, ms=6, label="join points")],
-              loc="upper right")
-    panel_label(a2, "(c) microcanonical 1/T across joins")
+    m = sim & np.isfinite(beta) & (e > -1.95) & (e < 0.15)
+    ax[2].plot(e[m], beta[m], color=BLUE, lw=1.8)
+    ax[2].plot(e[d["joins"]], np.full(len(d["joins"]), -0.07), "|", color=ORANGE, ms=12, mew=1.4)
+    ax[2].axhline(1 / X.TC_ISING, color=INK, lw=1.2)
+    ax[2].axvline(ec, color=INK, lw=1.2)
+    ax[2].text(-0.55, 1 / X.TC_ISING + 0.04, r"$1/T_c$ (Onsager)", fontsize=17, color=INK)
+    ax[2].text(ec + 0.04, 0.95, r"$E_c/N=-\sqrt{2}$", fontsize=17, color=INK)
+    ax[2].text(-1.9, -0.02, "join points", fontsize=16, color=ORANGE, va="bottom")
+    ax[2].set(xlabel="E/N  (J)", ylabel=r"$\beta(E)=d\,\ln g/dE$  (1/J)", xlim=(-2.0, 0.2),
+              ylim=(-0.12, 1.1))
+    panel_label(ax[2], "(c) microcanonical 1/T")
     save(fig, "multirange_L256.png")
 
 
@@ -377,7 +368,7 @@ def fig_fss():
     ax[1].set_xticklabels([str(L) for L in sizes])
     ax[1].minorticks_off()
     ax[1].set(xlabel="L  (log scale)", ylabel=r"$C_{max}/N$  ($k_B$)")
-    ax[1].legend(loc="lower right", fontsize=17)
+    ax[1].legend(loc="upper left", fontsize=17)
     panel_label(ax[1], r"(b) $C_{max}$ grows as ln L")
 
     ax[2].plot(Tx, X.onsager_magnetisation(Tx), color=INK, lw=1.8, label="Onsager–Yang (L→∞)")
@@ -385,7 +376,7 @@ def fig_fss():
     ax[2].set(xlabel=r"T  ($J/k_B$)", ylabel=r"$\langle |M| \rangle\,/\,N$", xlim=(1.6, 3.4), ylim=(0, 1.02))
     h, l = ax[2].get_legend_handles_labels()
     ax[2].legend(h[-1:], l[-1:], loc="upper right", fontsize=17)
-    ax[2].text(3.38, 0.55, "colours: L as in (a)", ha="right", fontsize=16, color=INK2)
+    ax[2].text(3.38, 0.70, "colours: L as in (a)", ha="right", fontsize=16, color=INK2)
     panel_label(ax[2], "(c) order parameter")
     save(fig, "fss_ising.png")
     np.savetxt(os.path.join(RES, "cmax_table.txt"), p,
@@ -403,38 +394,39 @@ def fig_potts(sizes=None, q=10):
         sizes = sorted(int(os.path.basename(f).split("_L")[1].split(".")[0])
                        for f in glob.glob(os.path.join(RES, f"potts_q{q}_L*.npz")))
     data = [(L, load(f"potts_q{q}_L{L}.npz")) for L in sizes]
-    data = [(L, d) for L, d in data if d is not None][-5:]
+    data = [(L, d) for L, d in data if d is not None]
     if len(data) < 2:
         print("  (potts data missing)")
         return
     tc, (eo, ed) = X.potts_tc(q), X.potts_phase_energies(q)
     fig, ax = plt.subplots(1, 3, figsize=(16.6, 5.6), constrained_layout=True,
                            gridspec_kw=dict(width_ratios=[1.5, 1, 1]))
-    rows = []
-    for c, (L, d) in zip(ORANGES, data):
+    rows, curves = [], []
+    for L, d in data:
         N = L * L
         E, lng = d["E"].astype(float), d["lng"]
         Tl = equal_height_temperature(E, lng, tc, e_split=0.5 * (eo + ed) * N)
         P = energy_distribution(E, lng, Tl)
         e = E / N
         lo, hi = e < 0.5 * (eo + ed), e >= 0.5 * (eo + ed)
-        pmax = np.nanmax(P[lo])
-        Pn = P / pmax
+        i_o = np.flatnonzero(lo)[np.nanargmax(P[lo])]
+        i_d = np.flatnonzero(hi)[np.nanargmax(P[hi])]
+        Pn = P / P[i_o]
+        pmin = np.nanmin(Pn[i_o:i_d + 1])
+        rows.append((L, Tl, pmin, e[i_o], e[i_d], d["sweeps"]))
+        curves.append((L, e, Pn))
+    show = [curves[int(round(k))] for k in np.linspace(0, len(curves) - 1, min(5, len(curves)))]
+    for c, (L, e, Pn) in zip(ORANGES, show):
         ok = np.isfinite(Pn) & (Pn > 0)
         ax[0].semilogy(e[ok], Pn[ok], color=c, lw=2.2, label=f"L = {L}")
-        mid = (e > e[lo][np.nanargmax(P[lo])]) & (e < e[hi][np.nanargmax(np.where(hi, P, -1)[hi])])
-        pmin = np.nanmin(Pn[mid])
-        e_o = e[lo][np.nanargmax(P[lo])]
-        e_d = e[hi][np.nanargmax(P[hi])]
-        rows.append((L, Tl, pmin, e_o, e_d, d["sweeps"]))
     ax[0].axvline(eo, color=INK, lw=1.1)
     ax[0].axvline(ed, color=INK, lw=1.1)
-    ax[0].text(eo + 0.015, 2e-5, r"$e_{ord}$ (exact)", fontsize=17, color=INK)
-    ax[0].text(ed + 0.015, 2e-5, r"$e_{dis}$ (exact)", fontsize=17, color=INK)
+    ax[0].text(eo + 0.012, 2.2, r"$e_{ord}$ (exact)", fontsize=17, color=INK, va="bottom")
+    ax[0].text(ed + 0.012, 2.2, r"$e_{dis}$ (exact)", fontsize=17, color=INK, va="bottom")
     ax[0].set(xlabel="E/N  (J)", ylabel=r"$P(E, T_c(L))$  (peaks = 1)", xlim=(-1.84, -0.72),
-              ylim=(1e-5, 3))
-    ax[0].legend(loc="lower center", ncol=3, fontsize=17)
-    panel_label(ax[0], "(a) canonical distribution at equal-height T")
+              ylim=(1e-5, 12))
+    ax[0].legend(loc="lower center", ncol=3, fontsize=17, columnspacing=1.2)
+    panel_label(ax[0], "(a) energy distribution at the equal-height T")
 
     r = np.array(rows)
     x = 1.0 / r[:, 0] ** 2
@@ -450,16 +442,17 @@ def fig_potts(sizes=None, q=10):
     panel_label(ax[1], r"(b) $T_c(L) \to T_c(\infty)$")
 
     dF = -np.log(r[:, 2])
-    fit2 = np.polyfit(r[-3:, 0], dF[-3:], 1)
+    big = r[:, 0] >= 48
+    fit2 = np.polyfit(r[big, 0], dF[big], 1)
     ax[2].plot(r[:, 0], dF, "o", ms=9, color=ORANGES[3], label="Wang–Landau")
     xx = np.linspace(0, r[:, 0].max() * 1.05, 20)
     ax[2].plot(xx, np.polyval(fit2, xx), color=ORANGE, lw=2, zorder=0,
-               label=f"slope {fit2[0]:.4f}")
+               label=f"slope {fit2[0]:.3f} (L ≥ 48)")
     ax[2].set(xlabel="L", ylabel=r"$\ln(P_{max}/P_{min})$", ylim=(0, None), xlim=(0, None))
     ax[2].legend(loc="upper left", fontsize=17)
     ax[2].text(0.97, 0.05, "exact 2σ = 0.0947\n(Borgs–Janke)", transform=ax[2].transAxes,
                ha="right", va="bottom", fontsize=17, color=INK2)
-    panel_label(ax[2], "(c) barrier grows ∝ L")
+    panel_label(ax[2], r"(c) barrier grows $\propto$ L")
     save(fig, "potts_q10.png")
     np.savetxt(os.path.join(RES, "potts_table.txt"), r,
                header="L  Tc(L)  Pmin/Pmax  e_ord  e_dis  sweeps", fmt="%.6g")

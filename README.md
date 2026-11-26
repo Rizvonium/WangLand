@@ -25,6 +25,7 @@ Units: J = k_B = 1 (energies in J, temperatures in J/k_B, C and S in k_B).
 | `demo.py` | quick sample run (16×16, ~4 s) with saved console output |
 | `run_all.py` | all production runs → `results/*.npz` |
 | `make_figures.py` | all figures → `figures/*.png` |
+| `accuracy_study.py` | 64×64: accuracy vs flatness, check interval and window count → `results/accuracy_L64.txt` |
 
 ## Running
 
@@ -33,7 +34,8 @@ pip install -r requirements.txt
 python demo.py                      # 16x16 demo: results/demo_L16.npz, figures/demo_L16.png
 python run_all.py convergence windows ising
 python run_all.py ising256          # 256x256, 128 windows (about 25 min on 4 cores)
-python run_all.py potts_fast --potts 24 32 48 64
+python run_all.py potts_fast --potts 24 32 40 48 56 64 80 96
+python accuracy_study.py            # about 10 min on 4 cores
 python make_figures.py              # every figure whose data exist
 ```
 
@@ -51,10 +53,25 @@ python make_figures.py              # every figure whose data exist
   again; neighbouring pieces are joined at the energy in the overlap where
   their slopes `d ln g / dE` agree best
 
-## Results
+## Results (all checked against exact solutions)
 
-See `figures/` and the slide deck. Key numbers are collected in
-`results/*_table.txt`.
+| Test | This work | Paper |
+|---|---|---|
+| ln g(E), 32×32, one walk: mean relative error | 3.4×10⁻⁴ (9.3×10⁵ sweeps) | 3.5×10⁻⁴ (7×10⁵ sweeps) |
+| ln g(E), 50×50, 4 windows: mean relative error | 1.1×10⁻⁴ | (figure only) |
+| 256×256, multiple ranges | 128 windows, 3.4×10⁶ sweeps, 32 min on 4 cores | 15 windows, 6.1×10⁶ sweeps |
+| 256×256 free energy, max ε(F) | 6×10⁻⁵ | < 8×10⁻⁶ |
+| 256×256 specific heat, mean ε(C), 0.4 ≤ T ≤ 8 | 2.6 % (1 % at the peak) | 0.39 % |
+| 64×64 specific heat, mean / max ε(C) | 1.2 % / 4.4 % (2.0×10⁶ sweeps); 0.67 % / 2.5 % with 90 % flatness (5.8×10⁶) | max < 0.7 % (2×10⁷ sweeps) |
+| 2D Ising C_max(L), L = 8…256 | follows the exact (8K_c²/π) ln L growth, within 4 % of exact | – |
+| 10-state Potts, T_c(L → ∞) from equal-height peaks | see `results/potts_table.txt` | T_c = 1/ln(1+√10) = 0.701232 |
+
+Other checks: β(E) = d ln g/dE of the joined 256×256 result equals 1/T_c at
+E/N = −√2; ⟨|M|⟩(T) approaches the Onsager–Yang curve; the window study
+(`results/windows_table.txt`) and the convergence study
+(`results/convergence_table.txt`, error saturation below ln f ≈ 10⁻⁶).
+
+All figures are in `figures/`; numbers in `results/*_table.txt`.
 
 ## Acknowledgements and self-evaluation
 

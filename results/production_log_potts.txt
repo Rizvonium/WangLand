@@ -1,0 +1,10 @@
+== potts_fast
+  saved /home/user/WangLand/results/potts_q10_L24.npz
+  Potts L=24: W=6 sweeps=3,320,930 wall=16s
+  saved /home/user/WangLand/results/potts_q10_L32.npz
+  Potts L=32: W=10 sweeps=4,733,360 wall=53s
+  saved /home/user/WangLand/results/potts_q10_L48.npz
+  Potts L=48: W=17 sweeps=3,258,910 wall=57s
+  saved /home/user/WangLand/results/potts_q10_L64.npz
+  Potts L=64: W=31 sweeps=3,351,240 wall=96s
+== potts_fast done in 222s

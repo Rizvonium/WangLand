@@ -1,1 +1,4 @@
 == ising256
+  saved /home/user/WangLand/results/ising_L256.npz
+  L=256: W=128 sweeps=3,376,760 wall=1932s
+== ising256 done in 1932s
