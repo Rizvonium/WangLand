@@ -415,7 +415,10 @@ def fig_potts(sizes=None, q=10):
         pmin = np.nanmin(Pn[i_o:i_d + 1])
         rows.append((L, Tl, pmin, e[i_o], e[i_d], d["sweeps"]))
         curves.append((L, e, Pn))
-    show = [curves[int(round(k))] for k in np.linspace(0, len(curves) - 1, min(5, len(curves)))]
+    preferred = [20, 32, 48, 64, 96]                    # curves drawn in (a); fits use all L
+    show = [c for c in curves if c[0] in preferred]
+    if len(show) < 3:
+        show = [curves[int(round(k))] for k in np.linspace(0, len(curves) - 1, min(5, len(curves)))]
     for c, (L, e, Pn) in zip(ORANGES, show):
         ok = np.isfinite(Pn) & (Pn > 0)
         ax[0].semilogy(e[ok], Pn[ok], color=c, lw=2.2, label=f"L = {L}")
