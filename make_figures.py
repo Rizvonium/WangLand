@@ -427,7 +427,7 @@ def fig_potts(sizes=None, q=10):
     ax[0].text(eo + 0.012, 2.2, r"$e_{ord}$ (exact)", fontsize=17, color=INK, va="bottom")
     ax[0].text(ed + 0.012, 2.2, r"$e_{dis}$ (exact)", fontsize=17, color=INK, va="bottom")
     ax[0].set(xlabel="E/N  (J)", ylabel=r"$P(E, T_c(L))$  (peaks = 1)", xlim=(-1.84, -0.72),
-              ylim=(1e-5, 12))
+              ylim=(1e-6, 12))
     ax[0].legend(loc="lower center", ncol=3, fontsize=17, columnspacing=1.2)
     panel_label(ax[0], "(a) energy distribution at the equal-height T")
 
@@ -445,20 +445,24 @@ def fig_potts(sizes=None, q=10):
     panel_label(ax[1], r"(b) $T_c(L) \to T_c(\infty)$")
 
     dF = -np.log(r[:, 2])
-    big = r[:, 0] >= 48
-    fit2 = np.polyfit(r[big, 0], dF[big], 1)
-    ax[2].plot(r[:, 0], dF, "o", ms=9, color=ORANGES[3], label="Wang–Landau")
+    fit2, cov2 = np.polyfit(r[:, 0], dF, 1, cov=True)      # all sizes
+    err2 = math.sqrt(cov2[0, 0])
+    ax[2].plot(r[:, 0], dF, "o", ms=9, color=ORANGES[3])
     xx = np.linspace(0, r[:, 0].max() * 1.05, 20)
     ax[2].plot(xx, np.polyval(fit2, xx), color=ORANGE, lw=2, zorder=0,
-               label=f"slope {fit2[0]:.3f} (L ≥ 48)")
+               label=f"fit: {fit2[0]:.3f} ± {err2:.3f}")
     ax[2].set(xlabel="L", ylabel=r"$\ln(P_{max}/P_{min})$", ylim=(0, None), xlim=(0, None))
-    ax[2].legend(loc="upper left", fontsize=17)
-    ax[2].text(0.97, 0.05, "exact 2σ = 0.0947\n(Borgs–Janke)", transform=ax[2].transAxes,
-               ha="right", va="bottom", fontsize=17, color=INK2)
+    ax[2].legend(loc="lower right", fontsize=17, title="Wang–Landau, all L", title_fontsize=16)
+    ax[2].text(0.04, 0.96, "exact 2σ = 0.0947\n(Borgs–Janke)", transform=ax[2].transAxes,
+               ha="left", va="top", fontsize=17, color=INK2)
     panel_label(ax[2], r"(c) barrier grows $\propto$ L")
     save(fig, "potts_q10.png")
     np.savetxt(os.path.join(RES, "potts_table.txt"), r,
                header="L  Tc(L)  Pmin/Pmax  e_ord  e_dis  sweeps", fmt="%.6g")
+    with open(os.path.join(RES, "potts_fits.txt"), "w") as fh:
+        fh.write(f"Tc(L) = a + b/L^2 (all L): Tc(inf) = {fit[1]:.6f}, exact {tc:.6f}\n")
+        fh.write(f"ln(Pmax/Pmin) = c + s*L (all L): s = {fit2[0]:.5f} +- {err2:.5f}, "
+                 f"exact 2*sigma_od = 0.0947\n")
     return r, fit, fit2
 
 

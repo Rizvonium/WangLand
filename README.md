@@ -64,7 +64,8 @@ python make_figures.py              # every figure whose data exist
 | 256×256 specific heat, mean ε(C), 0.4 ≤ T ≤ 8 | 2.6 % (1 % at the peak) | 0.39 % |
 | 64×64 specific heat, mean / max ε(C) | 1.2 % / 4.4 % (2.0×10⁶ sweeps); 0.67 % / 2.5 % with 90 % flatness (5.8×10⁶) | max < 0.7 % (2×10⁷ sweeps) |
 | 2D Ising C_max(L), L = 8…256 | follows the exact (8K_c²/π) ln L growth, within 4 % of exact | – |
-| 10-state Potts, T_c(L → ∞) from equal-height peaks | see `results/potts_table.txt` | T_c = 1/ln(1+√10) = 0.701232 |
+| 10-state Potts (L = 20–96), T_c(L → ∞) from equal-height peaks | 0.70126 | exact 1/ln(1+√10) = 0.70123 |
+| 10-state Potts, slope of ln(P_max/P_min) vs L (= 2σ_od) | 0.095 ± 0.006 | exact 0.0947 (Borgs–Janke) |
 
 Other checks: β(E) = d ln g/dE of the joined 256×256 result equals 1/T_c at
 E/N = −√2; ⟨|M|⟩(T) approaches the Onsager–Yang curve; the window study
