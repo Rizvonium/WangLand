@@ -1,2 +1,2 @@
-Tc(L) = a + b/L^2 (all L): Tc(inf) = 0.701258, exact 0.701232
+Tc(L) = a + b/L^2 (all L): Tc(inf) = 0.701258 +- 0.000110, exact 0.701232
 ln(Pmax/Pmin) = c + s*L (all L): s = 0.09521 +- 0.00571, exact 2*sigma_od = 0.0947

@@ -263,7 +263,7 @@ def fig_multirange():
     ax[2].axhline(1 / X.TC_ISING, color=INK, lw=1.2)
     ax[2].axvline(ec, color=INK, lw=1.2)
     ax[2].text(-0.55, 1 / X.TC_ISING + 0.04, r"$1/T_c$ (Onsager)", fontsize=17, color=INK)
-    ax[2].text(ec + 0.04, 0.95, r"$E_c/N=-\sqrt{2}$", fontsize=17, color=INK)
+    ax[2].text(ec + 0.04, 0.95, r"$-\sqrt{2}$ ($L\to\infty$)", fontsize=17, color=INK)
     ax[2].text(-1.9, -0.02, "join points", fontsize=16, color=ORANGE, va="bottom")
     ax[2].set(xlabel="E/N  (J)", ylabel=r"$\beta(E)=d\,\ln g/dE$  (1/J)", xlim=(-2.0, 0.2),
               ylim=(-0.12, 1.1))
@@ -433,14 +433,15 @@ def fig_potts(sizes=None, q=10):
 
     r = np.array(rows)
     x = 1.0 / r[:, 0] ** 2
-    fit = np.polyfit(x, r[:, 1], 1)
+    fit, cov1 = np.polyfit(x, r[:, 1], 1, cov=True)
+    err1 = math.sqrt(cov1[1, 1])
     xx = np.linspace(0, x.max() * 1.08, 20)
     ax[1].plot(xx * 1e4, np.polyval(fit, xx), color=ORANGE, lw=2, zorder=0, label="linear fit")
     ax[1].plot(x * 1e4, r[:, 1], "o", ms=9, color=ORANGES[3], label="Wang–Landau")
     ax[1].plot([0], [tc], "s", ms=11, mfc="none", mec=INK, mew=2, label="exact $T_c$")
     ax[1].set(xlabel=r"$10^4 / L^2$", ylabel=r"$T_c(L)$  ($J/k_B$)")
     ax[1].legend(loc="upper left", fontsize=17)
-    ax[1].text(0.97, 0.05, f"extrapolated {fit[1]:.5f}\nexact {tc:.5f}",
+    ax[1].text(0.97, 0.05, f"extrapolated {fit[1]:.4f} ± {err1:.4f}\nexact {tc:.5f}",
                transform=ax[1].transAxes, ha="right", va="bottom", fontsize=17, color=INK2)
     panel_label(ax[1], r"(b) $T_c(L) \to T_c(\infty)$")
 
@@ -460,7 +461,7 @@ def fig_potts(sizes=None, q=10):
     np.savetxt(os.path.join(RES, "potts_table.txt"), r,
                header="L  Tc(L)  Pmin/Pmax  e_ord  e_dis  sweeps", fmt="%.6g")
     with open(os.path.join(RES, "potts_fits.txt"), "w") as fh:
-        fh.write(f"Tc(L) = a + b/L^2 (all L): Tc(inf) = {fit[1]:.6f}, exact {tc:.6f}\n")
+        fh.write(f"Tc(L) = a + b/L^2 (all L): Tc(inf) = {fit[1]:.6f} +- {err1:.6f}, exact {tc:.6f}\n")
         fh.write(f"ln(Pmax/Pmin) = c + s*L (all L): s = {fit2[0]:.5f} +- {err2:.5f}, "
                  f"exact 2*sigma_od = 0.0947\n")
     return r, fit, fit2
