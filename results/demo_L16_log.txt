@@ -21,9 +21,9 @@ Wang-Landau demo: 2D Ising model, periodic L x L lattice, J = k_B = 1
   stage 17  ln f = 7.629e-06  sweeps =     49440  min(H)/<H> = 0.802
   stage 18  ln f = 3.815e-06  sweeps =     64170  min(H)/<H> = 0.801
   stage 19  ln f = 1.907e-06  sweeps =    321450  min(H)/<H> = 0.801
-  done  : 600,030 MC sweeps in 4.1 s (38 M flips/s)
+  done  : 600,030 MC sweeps in 3.1 s (49 M flips/s)
   output: E[257] lng[257] H[257] stages[20] F,U,S,C(T)[221]
   check : ln g(E_min) = 0.6931 = ln 2
           ln(sum g)/N = 0.69330  (ln 2 = 0.69315)
   exact : mean eps(ln g) = 3.00e-03
-          C_max/N = 1.568 at T = 2.325 (exact 1.551 at 2.325)
+          C_max/N = 1.568 at T = 2.325 (exact on grid: 1.551 at 2.325)

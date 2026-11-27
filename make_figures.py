@@ -160,7 +160,7 @@ def demo_figure(L=16):
     ax[2].axvline(X.TC_ISING, color=AXIS, lw=1.2)
     ax[2].text(X.TC_ISING + 0.08, 0.15, r"$T_c(\infty)$", color=INK2, fontsize=18)
     ax[2].set(xlabel=r"T  ($J/k_B$)", ylabel=r"C/N  ($k_B$)", ylim=(0, None))
-    ax[2].legend(loc="center right")
+    ax[2].legend(loc="upper right", bbox_to_anchor=(1.0, 0.75))
     panel_label(ax[2], "(c) specific heat")
     save(fig, f"demo_L{L}.png")
 
@@ -204,7 +204,7 @@ def fig_dos():
               xlim=(-2.1, 2.1), ylim=(1e-7, 1e-1))
     ax[1].legend(loc="upper center", ncol=2)
     txt = "  ·  ".join(f"mean ε, L={L}: {m:.1e}" for L, m in summary)
-    ax[1].text(0.5, 0.04, txt, transform=ax[1].transAxes, ha="center", fontsize=17, color=INK2)
+    ax[1].text(0.5, 0.04, txt, transform=ax[1].transAxes, ha="center", fontsize=19, color=INK2)
     panel_label(ax[1], r"(b) $\varepsilon = |\ln g_{sim} - \ln g_{exact}| \,/\, \ln g_{exact}$")
     save(fig, "dos_vs_exact.png")
     return summary
@@ -233,11 +233,11 @@ def fig_multirange():
         yy = -0.07 - 0.045 * (k % 2)
         ax[0].plot([e[lo], e[hi]], [yy, yy], color=(BLUES[3] if k % 2 else BLUES[1]), lw=3,
                    solid_capstyle="butt")
-    ax[0].text(-1.0, -0.17, f"{len(wins)} windows", ha="center", va="top", fontsize=17, color=INK2)
+    ax[0].text(-1.0, -0.17, f"{len(wins)} windows", ha="center", va="top", fontsize=19, color=INK2)
     ax[0].axhline(math.log(2), color=AXIS, lw=1.1)
-    ax[0].text(1.98, math.log(2) + 0.015, "ln 2", ha="right", va="bottom", fontsize=17, color=INK2)
+    ax[0].text(1.98, math.log(2) + 0.015, "ln 2", ha="right", va="bottom", fontsize=19, color=INK2)
     ax[0].set(xlabel="E/N  (J)", ylabel="ln g(E) / N", xlim=(-2.05, 2.05), ylim=(-0.27, 0.8))
-    ax[0].legend(loc="upper right", fontsize=16, bbox_to_anchor=(1.0, 0.93))
+    ax[0].legend(loc="center", bbox_to_anchor=(0.5, 0.45), fontsize=19)
     panel_label(ax[0], "(a) joined density of states")
 
     ec = -math.sqrt(2)
@@ -250,10 +250,10 @@ def fig_multirange():
         ax[1].step(e[lo:hi + 1], h, where="mid", color=(BLUES[1], BLUES[3], ORANGE)[j], lw=1.6,
                    label=f"window {k + 1}")
     ax[1].axhline(0.8, color=INK, lw=1.4)
-    ax[1].text(0.03, 0.05, "flatness limit 0.8", transform=ax[1].transAxes, fontsize=17, color=INK)
-    ax[1].set(xlabel="E/N  (J)", ylabel=r"$H(E)\,/\,\langle H\rangle$", ylim=(0.6, 1.8))
-    ax[1].legend(loc="upper center", ncol=3, fontsize=15, handlelength=1.0, columnspacing=1.0)
-    panel_label(ax[1], "(b) neighbouring windows overlap")
+    ax[1].text(0.03, 0.05, "flatness limit 0.8", transform=ax[1].transAxes, fontsize=19, color=INK)
+    ax[1].set(xlabel="E/N  (J)", ylabel=r"$H(E)\,/\,\langle H\rangle$", ylim=(0.6, 2.4))
+    ax[1].legend(loc="upper center", ncol=1, fontsize=19, handlelength=1.0)
+    panel_label(ax[1], "(b) overlapping windows")
 
     beta = np.full_like(lng, np.nan)
     beta[1:-1] = (lng[2:] - lng[:-2]) / 8.0             # d ln g / dE, dE = 4
@@ -262,9 +262,9 @@ def fig_multirange():
     ax[2].plot(e[d["joins"]], np.full(len(d["joins"]), -0.07), "|", color=ORANGE, ms=12, mew=1.4)
     ax[2].axhline(1 / X.TC_ISING, color=INK, lw=1.2)
     ax[2].axvline(ec, color=INK, lw=1.2)
-    ax[2].text(-0.55, 1 / X.TC_ISING + 0.04, r"$1/T_c$ (Onsager)", fontsize=17, color=INK)
-    ax[2].text(ec + 0.04, 0.95, r"$-\sqrt{2}$ ($L\to\infty$)", fontsize=17, color=INK)
-    ax[2].text(-1.9, -0.02, "join points", fontsize=16, color=ORANGE, va="bottom")
+    ax[2].text(-0.55, 1 / X.TC_ISING + 0.04, r"$1/T_c$ (Onsager)", fontsize=19, color=INK)
+    ax[2].text(ec + 0.04, 0.95, r"$-\sqrt{2}$ ($L\to\infty$)", fontsize=19, color=INK)
+    ax[2].text(-1.25, -0.02, "join points", fontsize=19, color=ORANGE, va="bottom")
     ax[2].set(xlabel="E/N  (J)", ylabel=r"$\beta(E)=d\,\ln g/dE$  (1/J)", xlim=(-2.0, 0.2),
               ylim=(-0.12, 1.1))
     panel_label(ax[2], "(c) microcanonical 1/T")
@@ -309,7 +309,7 @@ def fig_thermo256():
         b.semilogy(T[rng], eps[rng], color=BLUE, lw=1.4)
         b.set(xlabel=r"T  ($J/k_B$)", ylabel=fr"$\varepsilon({k})$", xlim=(0, 8.1))
         stats[k] = (eps[rng].mean(), eps[rng].max())
-    ax[0, 0].legend(loc="lower left", fontsize=17)
+    ax[0, 0].legend(loc="lower left", fontsize=19)
     ax[0, 2].set_ylim(0, None)
     save(fig, "thermo_L256.png")
     return stats
@@ -350,8 +350,8 @@ def fig_fss():
             ax[0].plot(Tx, ex["C"], color=INK, lw=1.0, ls=(0, (1, 2.2)))
     ax[0].axvline(X.TC_ISING, color=AXIS, lw=1.2)
     ax[0].set(xlabel=r"T  ($J/k_B$)", ylabel=r"C/N  ($k_B$)", xlim=(1.6, 3.4), ylim=(0, None))
-    ax[0].legend(loc="upper right", fontsize=17, handlelength=1.2)
-    ax[0].text(1.65, 0.05, "dotted: exact", fontsize=16, color=INK2, transform=ax[0].transData)
+    ax[0].legend(loc="upper right", fontsize=19, handlelength=1.2)
+    ax[0].text(1.65, 0.05, "dotted: exact", fontsize=19, color=INK2, transform=ax[0].transData)
     panel_label(ax[0], "(a) specific heat vs L")
 
     p = np.array(peaks)
@@ -368,15 +368,15 @@ def fig_fss():
     ax[1].set_xticklabels([str(L) for L in sizes])
     ax[1].minorticks_off()
     ax[1].set(xlabel="L  (log scale)", ylabel=r"$C_{max}/N$  ($k_B$)")
-    ax[1].legend(loc="upper left", fontsize=17)
+    ax[1].legend(loc="lower right", fontsize=19)
     panel_label(ax[1], r"(b) $C_{max}$ grows as ln L")
 
     ax[2].plot(Tx, X.onsager_magnetisation(Tx), color=INK, lw=1.8, label="Onsager–Yang (L→∞)")
     ax[2].axvline(X.TC_ISING, color=AXIS, lw=1.2)
     ax[2].set(xlabel=r"T  ($J/k_B$)", ylabel=r"$\langle |M| \rangle\,/\,N$", xlim=(1.6, 3.4), ylim=(0, 1.02))
     h, l = ax[2].get_legend_handles_labels()
-    ax[2].legend(h[-1:], l[-1:], loc="upper right", fontsize=17)
-    ax[2].text(3.38, 0.70, "colours: L as in (a)", ha="right", fontsize=16, color=INK2)
+    ax[2].legend(h[-1:], l[-1:], loc="upper right", fontsize=19)
+    ax[2].text(3.38, 0.70, "colours: L as in (a)", ha="right", fontsize=19, color=INK2)
     panel_label(ax[2], "(c) order parameter")
     save(fig, "fss_ising.png")
     np.savetxt(os.path.join(RES, "cmax_table.txt"), p,
@@ -424,11 +424,11 @@ def fig_potts(sizes=None, q=10):
         ax[0].semilogy(e[ok], Pn[ok], color=c, lw=2.2, label=f"L = {L}")
     ax[0].axvline(eo, color=INK, lw=1.1)
     ax[0].axvline(ed, color=INK, lw=1.1)
-    ax[0].text(eo + 0.012, 2.2, r"$e_{ord}$ (exact)", fontsize=17, color=INK, va="bottom")
-    ax[0].text(ed + 0.012, 2.2, r"$e_{dis}$ (exact)", fontsize=17, color=INK, va="bottom")
+    ax[0].text(eo + 0.012, 2.2, r"$e_{ord}$ (exact)", fontsize=19, color=INK, va="bottom")
+    ax[0].text(ed + 0.012, 2.2, r"$e_{dis}$ (exact)", fontsize=19, color=INK, va="bottom")
     ax[0].set(xlabel="E/N  (J)", ylabel=r"$P(E, T_c(L))$  (peaks = 1)", xlim=(-1.84, -0.72),
-              ylim=(1e-6, 12))
-    ax[0].legend(loc="lower center", ncol=3, fontsize=17, columnspacing=1.2)
+              ylim=(1e-6, 3e3))
+    ax[0].legend(loc="upper center", ncol=3, fontsize=19, columnspacing=1.0, frameon=True, facecolor="#FAFAF7", edgecolor="none", framealpha=1)
     panel_label(ax[0], "(a) energy distribution at the equal-height T")
 
     r = np.array(rows)
@@ -440,9 +440,9 @@ def fig_potts(sizes=None, q=10):
     ax[1].plot(x * 1e4, r[:, 1], "o", ms=9, color=ORANGES[3], label="Wang–Landau")
     ax[1].plot([0], [tc], "s", ms=11, mfc="none", mec=INK, mew=2, label="exact $T_c$")
     ax[1].set(xlabel=r"$10^4 / L^2$", ylabel=r"$T_c(L)$  ($J/k_B$)")
-    ax[1].legend(loc="upper left", fontsize=17)
-    ax[1].text(0.97, 0.05, f"extrapolated {fit[1]:.4f} ± {err1:.4f}\nexact {tc:.5f}",
-               transform=ax[1].transAxes, ha="right", va="bottom", fontsize=17, color=INK2)
+    ax[1].legend(loc="upper left", fontsize=19)
+    ax[1].text(0.97, 0.04, f"fit: {fit[1]:.4f} ± {err1:.4f}\nexact: {tc:.5f}",
+               transform=ax[1].transAxes, ha="right", va="bottom", fontsize=19, color=INK2)
     panel_label(ax[1], r"(b) $T_c(L) \to T_c(\infty)$")
 
     dF = -np.log(r[:, 2])
@@ -453,9 +453,9 @@ def fig_potts(sizes=None, q=10):
     ax[2].plot(xx, np.polyval(fit2, xx), color=ORANGE, lw=2, zorder=0,
                label=f"fit: {fit2[0]:.3f} ± {err2:.3f}")
     ax[2].set(xlabel="L", ylabel=r"$\ln(P_{max}/P_{min})$", ylim=(0, None), xlim=(0, None))
-    ax[2].legend(loc="lower right", fontsize=17, title="Wang–Landau, all L", title_fontsize=16)
+    ax[2].legend(loc="lower right", fontsize=19)
     ax[2].text(0.04, 0.96, "exact 2σ = 0.0947\n(Borgs–Janke)", transform=ax[2].transAxes,
-               ha="left", va="top", fontsize=17, color=INK2)
+               ha="left", va="top", fontsize=19, color=INK2)
     panel_label(ax[2], r"(c) barrier grows $\propto$ L")
     save(fig, "potts_q10.png")
     np.savetxt(os.path.join(RES, "potts_table.txt"), r,
@@ -500,7 +500,7 @@ def fig_efficiency():
     ax[0].set(xlabel="number of energy windows W", ylabel="MC sweeps")
     ax[0].set_xticks(Ws)
     ax[0].set_xticklabels([str(int(w)) for w in Ws])
-    ax[0].legend(loc="lower left", fontsize=17)
+    ax[0].legend(loc="lower left", fontsize=19)
     panel_label(ax[0], "(a) cost, 32×32 (ln f → 10⁻⁸)")
 
     ax[1].errorbar(Ws, acc[:, 0], yerr=[acc[:, 0] - acc[:, 1], acc[:, 2] - acc[:, 0]],
@@ -539,7 +539,7 @@ def fig_efficiency():
     ax[2].set(xlabel="modification factor  ln f", ylabel=r"mean $\varepsilon(\ln g)$",
               ylim=(1e-4, errs.max() * 2))
     ax[2].invert_xaxis()
-    ax[2].legend(loc="upper right", fontsize=17)
+    ax[2].legend(loc="upper right", fontsize=19)
     panel_label(ax[2], "(c) error saturates, 16×16")
     save(fig, "efficiency.png")
     np.savetxt(os.path.join(RES, "windows_table.txt"),
@@ -588,7 +588,7 @@ def fig_join():
     for j in d["joins"]:
         ax[1].axvline(e[j], color=ORANGE, lw=1.2, zorder=0)
     ax[1].set(xlabel="E/N  (J)", ylabel="ln g(E)", xlim=(-2.05, 0.25))
-    ax[1].legend(loc="lower right", fontsize=17)
+    ax[1].legend(loc="lower right", fontsize=19)
     ax[1].set_title("(b) joined at E* (orange lines)", fontsize=20)
     save(fig, "join_demo.png")
 

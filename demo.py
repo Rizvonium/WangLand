@@ -82,7 +82,7 @@ def main():
     print(f"          ln(sum g)/N = {lnsum:.5f}  (ln 2 = {np.log(2):.5f})", file=out)
     print(f"  exact : mean eps(ln g) = {eps.mean():.2e}", file=out)
     print(f"          C_max/N = {th['C'][i]:.3f} at T = {T[i]:.3f} "
-          f"(exact {th_ex['C'].max():.3f} at {T[np.argmax(th_ex['C'])]:.3f})", file=out)
+          f"(exact on grid: {th_ex['C'].max():.3f} at {T[np.argmax(th_ex['C'])]:.3f})", file=out)
 
     np.savez_compressed(os.path.join(HERE, "results", f"demo_L{a.L}.npz"),
                         E=E, lng=lng, H=res["H"], use=res["use"],
